@@ -1,0 +1,241 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   ANKIT DESIGN TOKENS — fuente única de verdad de marca
+   Rojo, negro, carbón y crema vienen del manual de marca.
+   El amarillo es un acento raro (nunca color de botón/UI base).
+============================================================ */
+:root {
+  --brand-black: #131313;
+  --brand-carbon: #1c1b19;
+  --brand-cream: #f5f0e7;
+  --brand-red: #c62828;
+  --brand-red-dim: #8f1d1d;
+  --brand-yellow: #ffff33;
+
+  --brand-text: var(--brand-cream);
+  --brand-muted: rgba(245, 240, 231, 0.6);
+
+  --container-width: 1440px;
+
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-xl: 4rem;
+  --space-2xl: 6rem;
+  --space-3xl: 9rem;
+
+  --radius-none: 0px;
+
+  --background: var(--brand-black);
+  --foreground: var(--brand-cream);
+  --card: var(--brand-carbon);
+  --card-foreground: var(--brand-cream);
+  --popover: var(--brand-carbon);
+  --popover-foreground: var(--brand-cream);
+  --primary: var(--brand-cream);
+  --primary-foreground: var(--brand-black);
+  --secondary: #201f1c;
+  --secondary-foreground: rgba(245, 240, 231, 0.85);
+  --muted: #201f1c;
+  --muted-foreground: rgba(245, 240, 231, 0.5);
+
+  /* Acento único del sitio = rojo de marca (antes era naranja, no
+     coincidía con el manual). Todo lo que use bg-accent/text-accent
+     ahora hereda automáticamente el rojo correcto. */
+  --accent: var(--brand-red);
+  --accent-foreground: var(--brand-cream);
+
+  --destructive: #8f1d1d;
+  --destructive-foreground: #f5f0e7;
+  --border: rgba(245, 240, 231, 0.1);
+  --input: rgba(245, 240, 231, 0.14);
+  --ring: var(--brand-red);
+  --radius: 0rem;
+  --sidebar: var(--brand-black);
+  --sidebar-foreground: var(--brand-cream);
+  --sidebar-primary: var(--brand-red);
+  --sidebar-primary-foreground: var(--brand-cream);
+  --sidebar-accent: var(--brand-carbon);
+  --sidebar-accent-foreground: var(--brand-cream);
+  --sidebar-border: rgba(245, 240, 231, 0.1);
+  --sidebar-ring: var(--brand-red);
+}
+
+@theme inline {
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-ibm-plex-mono);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Tokens de marca expuestos como utilidades: bg-brand-red,
+     text-brand-cream, border-brand-yellow, etc. */
+  --color-brand-black: var(--brand-black);
+  --color-brand-carbon: var(--brand-carbon);
+  --color-brand-cream: var(--brand-cream);
+  --color-brand-red: var(--brand-red);
+  --color-brand-red-dim: var(--brand-red-dim);
+  --color-brand-yellow: var(--brand-yellow);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    overflow-x: hidden;
+    max-width: 100vw;
+    scroll-padding-top: 6.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(245, 240, 231, 0.2) var(--brand-black);
+  }
+  body {
+    @apply bg-background text-foreground;
+    /* Antes tenía su propio "overflow-x: hidden" además del de html.
+       No hacía nada distinto (html ya recorta cualquier overflow
+       horizontal de sus descendientes, incluido body) pero tenía un
+       efecto secundario invisible: por la regla del spec de CSS, un
+       eje con overflow != visible y el otro en "visible" hace que el
+       otro eje se calcule como "auto" — así que body quedaba,
+       silenciosamente, como su propio "contenedor de scroll" aunque
+       nunca scrollea internamente (siempre es html/viewport quien
+       scrollea). position: sticky busca el ANCESTRO de scroll más
+       cercano para calcular cuándo queda "pegado" — con body en medio
+       (más cerca que html) y sin moverse nunca, cualquier sticky
+       dentro de body quedaba roto (nunca se pegaba). Se quita acá,
+       queda solo en html, que es el que sí scrollea de verdad. Ver
+       components/home/intro-reveal.tsx — es el primer componente del
+       sitio que usa sticky, por eso este bug no se había notado antes. */
+    max-width: 100vw;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(245, 240, 231, 0.2) var(--brand-black);
+  }
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    width: 10px;
+  }
+  html::-webkit-scrollbar-track,
+  body::-webkit-scrollbar-track {
+    background: var(--brand-black);
+  }
+  html::-webkit-scrollbar-thumb,
+  body::-webkit-scrollbar-thumb {
+    background: rgba(245, 240, 231, 0.2);
+    border-radius: 0px;
+  }
+  html::-webkit-scrollbar-thumb:hover,
+  body::-webkit-scrollbar-thumb:hover {
+    background: rgba(245, 240, 231, 0.32);
+  }
+
+  /* Foco visible consistente en toda la página — accesibilidad,
+     no solo estética. */
+  :focus-visible {
+    outline: 2px solid var(--brand-red);
+    outline-offset: 3px;
+  }
+}
+
+/* Sección con fondo crema (único quiebre de contraste del home,
+   reservado para el cierre). Invierte el color de texto/foco. */
+.theme-cream {
+  --background: var(--brand-cream);
+  --foreground: var(--brand-black);
+  --muted-foreground: rgba(19, 19, 19, 0.6);
+  --border: rgba(19, 19, 19, 0.14);
+  --accent-foreground: var(--brand-cream);
+  background: var(--brand-cream);
+  color: var(--brand-black);
+}
+.theme-cream :focus-visible {
+  outline-color: var(--brand-red);
+}
+
+/* Header oculto durante el intro del home (ver components/home/
+   intro-reveal.tsx) — la clase la pone/quita ese componente por
+   JS según el scroll, esta regla solo la traduce a CSS.
+   `visibility: hidden` en vez de solo opacity 0: opacity 0 deja el
+   header enfocable por teclado (Tab) aunque sea invisible — alguien
+   tabulando llegaría a links "fantasma" antes de ver el Hero.
+   visibility lo saca del tab order y de los clicks a la vez, sin
+   tocar layout (a diferencia de display:none, que rompe el fade
+   porque saca el elemento del flujo y framer-motion no tiene nada
+   que animar). Nunca se aplica sin JS (la clase nunca se agrega) ni
+   en ninguna página que no sea el home (ahí intro-reveal.tsx no
+   existe para agregarla) — el header por defecto siempre visible. */
+.header-hidden #site-header {
+  visibility: hidden;
+}
+
+/* Custom noise texture overlay */
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* Grid background pattern */
+.grid-bg {
+  background-image: linear-gradient(to right, rgba(245, 240, 231, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(245, 240, 231, 0.08) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Custom selection color */
+::selection {
+  background: var(--brand-red);
+  color: var(--brand-cream);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
