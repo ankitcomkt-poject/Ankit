@@ -5,27 +5,26 @@ import { Container } from "@/components/design-system/layout/container"
 import { Section } from "@/components/design-system/layout/section"
 import { OriginButton } from "@/components/design-system/buttons/origin-button"
 import { CategoryCard } from "@/components/blog/category-card"
-import { getAllCategories, getArticlesByCategory } from "@/lib/blog/content"
+import { getAllCategories, getArticlesByCategory } from "@/lib/impulso-digital/content"
 
 export const metadata: Metadata = {
-  title: "Blog — Ankit",
+  title: "Impulso Digital — Ankit",
   description:
-    "Guías sobre cómo hacer crecer una clínica de implantología o estética oral: captación, seguimiento y conversión de pacientes.",
+    "Sistemas de captación con IA, paid media y cómo dirigir una agencia en solitario — de José Manuel, fundador de Ankit.",
 }
 
 /**
- * Ya no es el placeholder estático de "estamos construyendo esta
- * página" — ahora lista las categorías (Pillar Pages) que existan de
- * verdad en content/blog/, generadas dinámicamente por
- * lib/blog/content.ts. La Fase 0 (esta entrega) deja la infraestructura
- * lista con content/blog/ vacío a propósito: la Fase 1 es escribir el
- * primer macrocluster real, no inventar contenido de relleno solo para
- * que esta página se vea llena. Por eso el fallback de abajo — mismo
- * criterio "placeholder honesto" que ya se usó en terminos/page.tsx y
- * en la versión anterior de esta misma página: nada de fechas o
- * artículos de mentira.
+ * Misma estructura que app/blog/page.tsx (índice dinámico desde el
+ * content layer + fallback honesto de "en construcción" mientras no
+ * haya categorías) pero apuntando al namespace "impulso-digital" —
+ * sección separada, sin cruzarse con /blog. Deliberadamente NO enlazada
+ * todavía desde el header/footer (ver components/layout/header/*.tsx y
+ * footer.tsx): esos enlaces son la navegación principal que ve un
+ * dueño de clínica, y un ítem de nav apuntando a una sección todavía
+ * vacía de contenido de posicionamiento no le sirve a esa audiencia —
+ * se agrega cuando haya al menos un artículo real.
  */
-export default function BlogIndexPage() {
+export default function ImpulsoDigitalIndexPage() {
   const categories = getAllCategories()
 
   if (categories.length === 0) {
@@ -33,18 +32,18 @@ export default function BlogIndexPage() {
       <PageWrapper>
         <Section className="flex min-h-[70vh] items-center pt-36 md:pt-44">
           <Container>
-            <p className="font-mono text-[12px] uppercase tracking-[0.2em] text-accent">Blog</p>
+            <p className="font-mono text-[12px] uppercase tracking-[0.2em] text-accent">Impulso Digital</p>
             <h1 className="mt-6 max-w-[22ch] text-[clamp(2.5rem,5.4vw,4.25rem)] font-bold leading-[1.05] tracking-[-0.025em] text-white">
               Estamos construyendo esta página.
             </h1>
             <p className="mt-6 max-w-[52ch] text-lg leading-8 text-white/60">
-              Todavía no hay artículos publicados. Si tienes una pregunta puntual mientras tanto, escríbenos
-              directamente — o agenda un diagnóstico y hablamos de tu negocio.
+              Todavía no hay artículos publicados aquí. Si buscas contenido sobre captación de pacientes para tu
+              clínica, esa parte del blog ya está disponible.
             </p>
 
             <div className="mt-10 flex flex-wrap items-center gap-4">
-              <OriginButton href="/diagnostico" size="lg" variant="primary">
-                Agenda un diagnóstico
+              <OriginButton href="/blog" size="lg" variant="primary">
+                Ir al blog de clínicas
               </OriginButton>
               <Link
                 href="/"
@@ -63,12 +62,12 @@ export default function BlogIndexPage() {
     <PageWrapper>
       <Section className="pt-36 md:pt-44">
         <Container>
-          <p className="font-mono text-[12px] uppercase tracking-[0.2em] text-accent">Blog</p>
+          <p className="font-mono text-[12px] uppercase tracking-[0.2em] text-accent">Impulso Digital</p>
           <h1 className="mt-6 max-w-[26ch] text-[clamp(2.5rem,5.4vw,4.25rem)] font-bold leading-[1.05] tracking-[-0.025em] text-white">
-            Guías para hacer crecer tu clínica.
+            Sistemas, paid media y cómo dirigir una agencia en solitario.
           </h1>
           <p className="mt-6 max-w-[58ch] text-lg leading-8 text-white/60">
-            Captación, seguimiento y conversión de pacientes — sin relleno genérico de marketing.
+            Lo que aprendo construyendo Ankit — de primera mano, no teoría genérica de marketing.
           </p>
 
           <div className="mt-14 grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -76,7 +75,7 @@ export default function BlogIndexPage() {
               <CategoryCard
                 key={category.slug}
                 category={category}
-                basePath="/blog"
+                basePath="/impulso-digital"
                 articleCount={getArticlesByCategory(category.slug).length}
                 delay={i * 100}
               />
