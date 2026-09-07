@@ -23,6 +23,13 @@ import { Logo } from "@/components/layout/header/logo"
  * GSAP+ScrollTrigger que traía colophon-section.tsx — no había
  * justificación para que el footer fuera la única sección con su
  * propio motor de animación aparte.
+ *
+ * "Impulso Digital" se agrega acá (footer) y deliberadamente NO al
+ * header (ver desktop-nav.tsx/mobile-menu.tsx) — es contenido de
+ * posicionamiento personal para otros marketers, no parte del embudo
+ * de conversión hacia clínicas que sí domina el header. El footer da
+ * acceso de un clic sin competir por atención con Sistema/Soluciones/
+ * Diagnóstico en la navegación principal.
  */
 
 const NAV_LINKS = [
@@ -32,6 +39,7 @@ const NAV_LINKS = [
   { label: "Nosotros", href: "/nosotros" },
   { label: "Diagnóstico", href: "/diagnostico" },
   { label: "Blog", href: "/blog" },
+  { label: "Impulso Digital", href: "/impulso-digital" },
 ]
 
 const CONTACT_LINKS = [
